@@ -20,6 +20,11 @@ jobs:
       with:
         python-version: 3.x
 
+    - name: Update apt packages and install ffmpeg
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y ffmpeg
+
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
@@ -28,18 +33,10 @@ jobs:
     - name: Run upload.py
       run: python upload.py ${{ github.event.inputs.artist_name }}
 
-    - name: Add changes
-      run: git add index.html
-
-    - name: Commit changes
+    - name: Commit and push changes
       run: |
         git config --local user.email "actions@github.com"
         git config --local user.name "GitHub Actions"
-        git commit -m "Update index.html"
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-    - name: Push changes
-      run: git push origin HEAD:${{ github.ref }}
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        git add index.html
+        git commit -m "Update index.html for ${{ github.event.inputs.artist_name }}"
+        git push
