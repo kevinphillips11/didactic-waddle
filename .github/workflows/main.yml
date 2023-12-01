@@ -27,3 +27,15 @@ jobs:
 
     - name: Run upload.py
       run: python upload.py ${{ github.event.inputs.artist_name }}
+
+    - name: Commit changes
+      run: |
+        git config --local user.email "actions@github.com"
+        git config --local user.name "GitHub Actions"
+        git add index.html
+        git commit -m "Update index.html"
+        
+    - name: Push changes
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
